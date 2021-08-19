@@ -1,4 +1,5 @@
 #' @param img Vector of character file names or list of \code{nifti} images
+#' @param surf Vector of character file names or list of \code{gifti} files
 #' @param elementId ID for the element in the DOM
 #' @param width Width of the widget
 #' @param height height of the widget
@@ -33,6 +34,7 @@
 #'
 papaya <- function(
   img = NULL,
+  surf = NULL,
   elementId = NULL,
   width = NULL, height = NULL,
   options = NULL,
@@ -56,6 +58,22 @@ papaya <- function(
   } else {
     fileData = NULL
   }
+
+  # surfaces
+  surface_names = NULL
+  if (!is.null(surf)) {
+    surf = checkimg(surf, allow_array = TRUE)
+    surface_names = sapply(surf, function(x) {
+      basename(tempfile(pattern = "surf_"))
+    })
+
+    surface_names = unname(surface_names)
+    surfData = sapply(surf, base64enc::base64encode)
+    surfData <- jsonlite::toJSON(surfData)
+  } else {
+    surfData = NULL
+  }
+
   if (is.null(elementId)) {
     elementId = basename(tempfile())
   }
@@ -74,6 +92,7 @@ papaya <- function(
     index = 0,
     id = elementId,
     images = fileData,
+    surfaces = surfData,
     options = options,
     ignore_sync = !sync_view,
     hide_toolbar = hide_toolbar,
@@ -81,6 +100,8 @@ papaya <- function(
     orthogonal = orthogonal
   )
   x$image_names = image_names
+  x$surface_names = surface_names
+
 
 
   # create widget

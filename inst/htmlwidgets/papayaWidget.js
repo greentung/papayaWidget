@@ -28,10 +28,17 @@ HTMLWidgets.widget({
         console.log("x options are ");
         var opts = x.options;
         console.log(opts);
+
         var img = x.images;
         var image_names = x.image_names;
         console.log("image_names are ");
         console.log(image_names);
+
+        // Surface
+        var surfaces = x.surfaces;
+        var surface_names = x.surface_names;
+        console.log("surface_names are ");
+        console.log(surface_names);
 
         var ignore_sync = x.ignore_sync;
         ignore_sync = Boolean(ignore_sync);
@@ -48,25 +55,45 @@ HTMLWidgets.widget({
         console.log("ignore sync is ");
         console.log(ignore_sync);
 
+
+
         // console.log(img[0]);
         // window.img = img;
         var params = [];
         var mystring = [];
+        var surf_string = [];
+        var i;
         if (img && img.length > 0) {
           console.log("img");
           console.log(img.constructor.name);
-          for (var i = 0; i < img.length; ++i) {
+
+          for (i = 0; i < img.length; ++i) {
             iname = image_names[i];
             window[iname] = img[i];
             mystring[i] = iname;
           }
+
           params.encodedImages = mystring ;
           params["kioskMode"] = hide_toolbar;
           params["showControls"] = show_controls;
           params["orthogonal"] = orthogonal;
 
+          // Surface files
+          if(surfaces !== null ) {
+            for (i = 0; i < surfaces.length; ++i) {
+              sname = surface_names[i];
+              window[sname] = surfaces[i];
+              surf_string[i] = sname;
+            }
+
+            // add surfaces to params
+            params.encodedSurfaces = surf_string;
+            console.log(surfaces)
+          }
+
+
           if (opts && opts.length > 0) {
-            for (var i = 0; i < opts.length; ++i) {
+            for (i = 0; i < opts.length; ++i) {
               var ix = opts[i];
               iname = image_names[i];
               if (typeof ix !== 'undefined' && ix !== null) {
@@ -79,7 +106,7 @@ HTMLWidgets.widget({
         // img = img[0];
         // console.log(img.constructor.name);
         //params.encodedImages = ["img0"];
-        console.log(params);
+        console.log(params["images"]);
         //papaya.Container.addViewer
         //papaya.Container.addViewer = function (parentName, params, callback) {
         //papaya.Container.addViewer
@@ -87,6 +114,9 @@ HTMLWidgets.widget({
         if (typeof id === 'undefined' || id === null) {
           id = x.id;
         }
+
+        //papaya.Container.surfaces = surface_names;
+
         papaya.Container.addViewer(id, params = params);
         papaya.Container.syncViewers = true;
         var container_number = papayaContainers.length - 1;
