@@ -59,7 +59,7 @@ papaya <- function(
     fileData = NULL
   }
 
-  # surfaces
+  # handle surface files
   surface_names = NULL
   if (!is.null(surf)) {
     surf = checkimg(surf, allow_array = TRUE)

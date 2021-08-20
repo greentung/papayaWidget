@@ -78,7 +78,7 @@ HTMLWidgets.widget({
           params["showControls"] = show_controls;
           params["orthogonal"] = orthogonal;
 
-          // Surface files
+          // Check for Surface files
           if(surfaces !== null ) {
             for (i = 0; i < surfaces.length; ++i) {
               sname = surface_names[i];
